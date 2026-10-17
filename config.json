@@ -1,0 +1,8 @@
+{
+    "data_file": "vs_status.json",
+    "warning": 200,
+    "critical": 500,
+    "url": "http://127.0.0.1:8000",
+    "username": "admin",
+    "max_pages": 10
+}
