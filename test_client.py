@@ -1,7 +1,8 @@
 from client import AviHttpClient
 import pytest
-from exceptions import VSdataError
+from exceptions import VSdataError, ControllerLoginError
 import requests
+import os
 
 class FakeResponse:
     def __init__(self, body, status_code=200):
@@ -44,3 +45,24 @@ def test_next_page_on_other_host_is_refused():
     with pytest.raises(VSdataError):
         client.list_all_vs()
     assert client.session.calls == ["http://127.0.0.1:8000/vs_pages?page=1"]
+
+def test_failed_with_retry_request():
+    client = AviHttpClient("http://127.0.0.1:8000", "admin",max_pages=10, tries=3, delay =0)
+    client.session = FakeSession([
+        requests.exceptions.ConnectionError("no reply"),
+        requests.exceptions.ConnectionError("no reply"),
+        FakeResponse({"results": ["a"]})
+    ])
+    assert client.list_all_vs() == ["a"]
+    assert client.session.calls == ["http://127.0.0.1:8000/vs_pages?page=1"] * 3
+
+def test_read_variable(monkeypatch):
+    monkeypatch.setenv("AVI_PASSWORD", "tiger")
+    client = AviHttpClient("http://127.0.0.1:8000", "admin",max_pages=10, tries=3, delay=0)
+    client.session = FakeSession([
+       FakeResponse({}, status_code=401),
+       FakeResponse({"token": "t"})
+       ])
+    with pytest.raises(ControllerLoginError):
+        client.login()
+    assert client.session.calls == ["http://127.0.0.1:8000/login"]
