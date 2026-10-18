@@ -1,4 +1,7 @@
 from client import AviHttpClient
+import pytest
+from exceptions import VSdataError
+
 class FakeResponse:
     def __init__(self, body, status_code=200):
         self.status_code = status_code
@@ -28,3 +31,12 @@ def test_two_pages_are_joined():
     assert client.list_all_vs() == ['a','b']
     assert client.session.calls == ["http://127.0.0.1:8000/vs_pages?page=1", "http://127.0.0.1:8000/vs_pages?page=2"]
 
+def test_next_page_on_other_host_is_refused():
+    client=AviHttpClient("http://127.0.0.1:8000", "admin", max_pages=10)
+    client.session = FakeSession([
+        FakeResponse({"results": ["a"] , "next": "http://localhost:8000/vs_pages?page=2"}),
+        FakeResponse({"results": ["b"]})
+    ])
+    with pytest.raises(VSdataError):
+        client.list_all_vs()
+    assert client.session.calls == ["http://127.0.0.1:8000/vs_pages?page=1"]
