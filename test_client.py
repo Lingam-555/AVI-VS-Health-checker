@@ -56,7 +56,7 @@ def test_failed_with_retry_request():
     assert client.list_all_vs() == ["a"]
     assert client.session.calls == ["http://127.0.0.1:8000/vs_pages?page=1"] * 3
 
-def test_read_variable(monkeypatch):
+def test_rejected_login_is_not_retried(monkeypatch):
     monkeypatch.setenv("AVI_PASSWORD", "tiger")
     client = AviHttpClient("http://127.0.0.1:8000", "admin",max_pages=10, tries=3, delay=0)
     client.session = FakeSession([
