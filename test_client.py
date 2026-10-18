@@ -1,6 +1,7 @@
 from client import AviHttpClient
 import pytest
 from exceptions import VSdataError
+import requests
 
 class FakeResponse:
     def __init__(self, body, status_code=200):
@@ -20,7 +21,10 @@ class FakeSession:
 
     def request(self, method, url, **kwargs):
         self.calls.append(url)
-        return self.responses.pop(0)
+        item = self.responses.pop(0)
+        if isinstance(item, Exception):
+            raise item
+        return item
 
 def test_two_pages_are_joined():
     client=AviHttpClient("http://127.0.0.1:8000","admin",max_pages=10)
