@@ -66,3 +66,14 @@ def test_rejected_login_is_not_retried(monkeypatch):
     with pytest.raises(ControllerLoginError):
         client.login()
     assert client.session.calls == ["http://127.0.0.1:8000/login"]
+
+def test_rejected_login_is_retried(monkeypatch):
+    monkeypatch.setenv("AVI_PASSWORD", "tiger")
+    client = AviHttpClient("http://127.0.0.1:8000", "admin",max_pages=10, tries=2, delay=0)
+    client.session = FakeSession([
+        requests.exceptions.ConnectionError("no reply"),
+        requests.exceptions.ConnectionError("no reply")
+       ])
+    with pytest.raises(VSdataError):
+        client.list_all_vs()
+    assert client.session.calls == ["http://127.0.0.1:8000/vs_pages?page=1"] * 2
