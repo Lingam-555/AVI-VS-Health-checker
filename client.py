@@ -80,8 +80,8 @@ class AviHttpClient:
                 url = body.get("next")
                 if url and page >= self.max_pages:
                     raise VSdataError(f"stopped after {page} pages, the server still has a next page")
-                # if url:
-                #     self._check_same_host(url)
+                if url:
+                    self._check_same_host(url)
         except requests.exceptions.RequestException as e:
             raise VSdataError(f"cannot read {url}: {e}")
         except (ValueError, KeyError) as e:
