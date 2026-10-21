@@ -3,6 +3,9 @@ import os
 import time
 from urllib.parse import urlparse
 from exceptions import VSdataError, ControllerLoginError
+import logging
+
+log = logging.getLogger(__name__)
 
 class AviHttpClient:
     def __init__(self, base_url, user, max_pages, timeout=5, tries = 5, delay =2):
@@ -31,6 +34,7 @@ class AviHttpClient:
             try:
                 return self.session.request(method, url, timeout=self.timeout, **kwargs)
             except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
+                log.warning(f"no reply on attempt {attempt} of {self.tries} from {url}")
                 if attempt == self.tries:
                     raise
                 time.sleep(self.delay)
@@ -77,6 +81,7 @@ class AviHttpClient:
                 body = r.json()
                 items.extend(body["results"])
                 page += 1
+                log.info(f"Page number: {page}: Number of items:{len(body['results'])}")
                 url = body.get("next")
                 if url and page >= self.max_pages:
                     raise VSdataError(f"stopped after {page} pages, the server still has a next page")

@@ -7,6 +7,10 @@ from labels import UNKNOWN
 from models import virtualservices
 from exceptions import VSdataError
 from client import AviHttpClient
+import logging
+
+logging.basicConfig(level=logging.INFO, format = "%(asctime)s %(levelname)s %(name)s %(message)s")
+
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 CONFIG_FILE = os.path.join(BASE_DIR,"config.json")

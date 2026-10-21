@@ -2,7 +2,7 @@ from client import AviHttpClient
 import pytest
 from exceptions import VSdataError, ControllerLoginError
 import requests
-import os
+import logging
 
 class FakeResponse:
     def __init__(self, body, status_code=200):
@@ -77,3 +77,16 @@ def test_rejected_login_is_retried(monkeypatch):
     with pytest.raises(VSdataError):
         client.list_all_vs()
     assert client.session.calls == ["http://127.0.0.1:8000/vs_pages?page=1"] * 2
+
+
+def test_each_failed_attempt_is_logged(caplog):
+    client = AviHttpClient("http://127.0.0.1:8000", "admin", max_pages=10, tries=3, delay=0)
+    client.session = FakeSession([
+        requests.exceptions.ConnectionError("no reply"),
+        requests.exceptions.ConnectionError("no reply"),
+        FakeResponse({"results": ["a"]})
+    ])
+    with caplog.at_level(logging.WARNING):
+        client.list_all_vs()
+    assert len(caplog.records) == 2
+    assert "no reply on attempt 2 of 3 from http://127.0.0.1:8000" in caplog.text
