@@ -8,14 +8,22 @@ from models import virtualservices
 from exceptions import VSdataError
 from client import AviHttpClient
 import logging
-
-logging.basicConfig(level=logging.INFO, format = "%(asctime)s %(levelname)s %(name)s %(message)s")
-
+import argparse
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 CONFIG_FILE = os.path.join(BASE_DIR,"config.json")
 
+def parse_args(argv=None):
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--config", default=CONFIG_FILE, help = "your config file (default: %(default)s)")
+    parser.add_argument("--log-level", choices=["DEBUG", "INFO", "WARNING", "ERROR"], default="INFO", help="Logging-level")
+    return parser.parse_args(argv)
+
+
 def main():
+    arg = parse_args()
+    logging.basicConfig(level=arg.log_level, format = "%(asctime)s %(levelname)s %(name)s %(message)s")
+    CONFIG_FILE = arg.config
     settings = load_config(CONFIG_FILE)
     if settings is None:
         sys.exit(1)
