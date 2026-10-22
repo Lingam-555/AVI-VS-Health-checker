@@ -100,4 +100,4 @@ def test_checks_password_never_reaches_a_log(monkeypatch, caplog):
     ])
     with caplog.at_level(logging.DEBUG):
         pytest.raises(VSdataError)
-    assert "tiget-secret" not in caplog.text
+    assert "tiger-secret" not in caplog.text
