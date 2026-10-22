@@ -90,3 +90,14 @@ def test_each_failed_attempt_is_logged(caplog):
         client.list_all_vs()
     assert len(caplog.records) == 2
     assert "no reply on attempt 2 of 3 from http://127.0.0.1:8000" in caplog.text
+
+def test_checks_password_never_reaches_a_log(monkeypatch, caplog):
+    monkeypatch.setenv("AVI_PASSWORD", "tiger-secret")
+    client = AviHttpClient("http://127.0.0.1:8000", "admin", max_pages=10, tries=2, delay=0)
+    client.session = FakeSession([
+        requests.exceptions.ConnectionError("no reply"),
+        requests.exceptions.ConnectionError("no reply")
+    ])
+    with caplog.at_level(logging.DEBUG):
+        pytest.raises(VSdataError)
+    assert "tiget-secret" not in caplog.text
