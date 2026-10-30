@@ -49,6 +49,7 @@ def main():
             vs = virtualservices(entry)
         except KeyError:
             health = {"name": entry.get("name"), "health": UNKNOWN}
+            continue
         health = classify_vs(vs,warning_threshold,critical_threshold)
         list_result.append(health)
     result = summarise(list_result)
