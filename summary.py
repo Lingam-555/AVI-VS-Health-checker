@@ -15,29 +15,29 @@ def summarise(results: list) -> dict:
 
         if health == CRITICAL:
             critical_count += 1
-            non_healthy_vs.append(name)
+            non_healthy_vs.append([name,health])
         elif health == WARNING:
             warning_count += 1
-            non_healthy_vs.append(name)
+            non_healthy_vs.append([name,health])
         elif health == UNKNOWN:
             unknown_count += 1
-            non_healthy_vs.append(name)
+            non_healthy_vs.append([name,health])
         elif health == DOWN:
             down_count += 1
-            non_healthy_vs.append(name)
+            non_healthy_vs.append([name,health])
         elif health == HEALTHY:
             healthy_count += 1
         else:
             unknown_count += 1
-            non_healthy_vs.append(name)
-
+            non_healthy_vs.append([name,health])
+            
     res = {
         "Healthy_count":healthy_count, 
         "Down_count": down_count,
         "Critical_count":critical_count, 
         "Warning_count":warning_count, 
         "Unknown_count":unknown_count, 
-        "Non-healthy_vs":non_healthy_vs
+        "Non_healthy_vs":non_healthy_vs
         }
 
     return res

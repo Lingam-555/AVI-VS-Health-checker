@@ -7,6 +7,7 @@ from labels import UNKNOWN
 from models import virtualservices
 from exceptions import VSdataError
 from client import AviHttpClient
+from csv_report import csv_report
 import logging
 import argparse
 
@@ -33,6 +34,8 @@ def main():
         base_url = settings["url"]
         username = settings["username"]
         max_pages = settings["max_pages"]
+# step 7: read the output file name from config.json
+        output = settings["output_file"]
     except KeyError as e:
         print(f"Invalid Key:{CONFIG_FILE} is missing the key {e}")
         sys.exit(1)
@@ -48,7 +51,7 @@ def main():
         try:
             vs = virtualservices(entry)
         except KeyError:
-            health = {"name": entry.get("name"), "health": UNKNOWN}
+            list_result.append({"name": entry.get("name"), "health": UNKNOWN})
             continue
         health = classify_vs(vs,warning_threshold,critical_threshold)
         list_result.append(health)
@@ -63,8 +66,15 @@ def main():
     print(f"Critical count : {critical}")
     print(f"Warning count : {warning}")
     print(f"Unknown count : {unknown}")
-    for non_healthy in result.get("Non-healthy_vs"):
-        print(non_healthy)
+    unhealthy_vs = result.get("Non_healthy_vs")
+    # step 8: call the function; if writing fails, print one message and exit with code 1
+    try:
+        csv_report(output,unhealthy_vs)
+    except OSError as e:
+        print(f"Writing failed: {e}")
+        sys.exit(1)
+    # for non_healthy in unhealthy_vs:
+    #     print(non_healthy)
 
 
 if __name__== "__main__":

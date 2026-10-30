@@ -10,7 +10,7 @@ def test_an_empty_list():
         "Critical_count":0, 
         "Warning_count":0, 
         "Unknown_count":0, 
-        "Non-healthy_vs":[]
+        "Non_healthy_vs":[]
         }
 
 def test_one_result_of_each_label():
@@ -25,7 +25,7 @@ def test_one_result_of_each_label():
         "Critical_count":1, 
         "Warning_count":1, 
         "Unknown_count":1, 
-        "Non-healthy_vs":["down-vs", "critical-vs", "warn-vs", "unknown-vs"]
+        "Non_healthy_vs":[["down-vs",DOWN],["critical-vs",CRITICAL],["warn-vs",WARNING],["unknown-vs",UNKNOWN]]
         }
 
 def test_not_a_known_label():
@@ -37,7 +37,7 @@ def test_not_a_known_label():
         "Critical_count":0, 
         "Warning_count":0, 
         "Unknown_count":1, 
-        "Non-healthy_vs":["unknown-label"]
+        "Non_healthy_vs":[["unknown-label","BANANA"]]
         }
     
 
@@ -50,5 +50,5 @@ def test_a_healthy_result():
         "Critical_count":0, 
         "Warning_count":0, 
         "Unknown_count":0, 
-        "Non-healthy_vs":[]
+        "Non_healthy_vs":[]
         }
