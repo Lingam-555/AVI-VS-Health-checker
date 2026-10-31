@@ -21,8 +21,8 @@ def parse_args(argv=None):
     return parser.parse_args(argv)
 
 
-def main():
-    arg = parse_args()
+def main(argv=None):
+    arg = parse_args(argv)
     logging.basicConfig(level=arg.log_level, format = "%(asctime)s %(levelname)s %(name)s %(message)s")
     CONFIG_FILE = arg.config
     settings = load_config(CONFIG_FILE)
