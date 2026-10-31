@@ -60,15 +60,13 @@ def test_rejected_login_is_not_retried(monkeypatch):
     monkeypatch.setenv("AVI_PASSWORD", "tiger")
     client = AviHttpClient("http://127.0.0.1:8000", "admin",max_pages=10, tries=3, delay=0)
     client.session = FakeSession([
-       FakeResponse({}, status_code=401),
-       FakeResponse({"token": "t"})
-       ])
+        FakeResponse({}, status_code=401)
+    ])
     with pytest.raises(ControllerLoginError):
         client.login()
     assert client.session.calls == ["http://127.0.0.1:8000/login"]
 
-def test_rejected_login_is_retried(monkeypatch):
-    monkeypatch.setenv("AVI_PASSWORD", "tiger")
+def test_connection_failures_exhaust_retries():
     client = AviHttpClient("http://127.0.0.1:8000", "admin",max_pages=10, tries=2, delay=0)
     client.session = FakeSession([
         requests.exceptions.ConnectionError("no reply"),
@@ -101,5 +99,5 @@ def test_checks_password_never_reaches_a_log(monkeypatch, caplog):
     ])
     with caplog.at_level(logging.DEBUG), pytest.raises(VSdataError):
         client.login()
-        assert "no reply on attempt" in caplog.text
+    assert "no reply on attempt" in caplog.text
     assert secret not in caplog.text
