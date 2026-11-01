@@ -34,7 +34,6 @@ def main(argv=None):
         base_url = settings["url"]
         username = settings["username"]
         max_pages = settings["max_pages"]
-# step 7: read the output file name from config.json
         output = settings["output_file"]
     except KeyError as e:
         print(f"Invalid Key:{CONFIG_FILE} is missing the key {e}")
@@ -67,15 +66,11 @@ def main(argv=None):
     print(f"Warning count : {warning}")
     print(f"Unknown count : {unknown}")
     unhealthy_vs = result.get("Non_healthy_vs")
-    # step 8: call the function; if writing fails, print one message and exit with code 1
     try:
         csv_report(output,unhealthy_vs)
     except OSError as e:
         print(f"Writing failed: {e}")
         sys.exit(1)
-    # for non_healthy in unhealthy_vs:
-    #     print(non_healthy)
-
 
 if __name__== "__main__":
     main()
