@@ -20,7 +20,7 @@ jobs:
               python-version: '3.12'
 # 9.       - install the requirements (requirements.txt does not exist yet)
           - name: Install pytest
-            run: pip install pytest==7.4.4 requests==2.31.0
+            run: pip install requests==2.31.0 pytest==7.4.4
 # 10.      - run pytest
           - name: run pytest
             run: pytest
