@@ -1,0 +1,26 @@
+# 1. name: a label shown in the Actions tab
+name: Github workflow
+# 2. on: which events start the workflow (push, on which branch)
+on: push
+# 3. jobs: a container for jobs
+jobs: 
+# 4.   test: the job name, shown in the Actions tab
+    test: 
+# 5.     runs-on: which runner machine (choose an Ubuntu label)
+      runs-on: ubuntu-24.04
+# 6.     steps:
+      steps:
+# 7.       - checkout the repository code
+          - name: checkout the repository code
+            uses: actions/checkout@v7.0.1
+# 8.       - set up Python 3.12
+          - name: set up Python 3.12
+            uses: actions/setup-python@v7.1.0
+            with:
+              python-version: '3.12'
+# 9.       - install the requirements (requirements.txt does not exist yet)
+          - name: Install pytest
+            run: pip install pytest==7.4.4
+# 10.      - run pytest
+          - name: run pytest
+            run: pytest
