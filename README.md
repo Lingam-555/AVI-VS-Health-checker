@@ -84,3 +84,5 @@ The client tests use a fake session, so no server is needed.
 ## Limits
 - It has been tested only against `fake_server.py`. A real controller's API paths, reply fields and login method may differ, and the project would need adapting.
 - `fake_server.py` and its token are for practice only.
+
+[![Github workflow](https://github.com/Lingam-555/AVI-VS-Health-checker/actions/workflows/pytest.yaml/badge.svg?branch=master&event=push)](https://github.com/Lingam-555/AVI-VS-Health-checker/actions/workflows/pytest.yaml)
