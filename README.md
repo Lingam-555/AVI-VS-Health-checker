@@ -1,4 +1,4 @@
-# AVI VS Health Checker
+# AVI VS Health Checker [![Github workflow](https://github.com/Lingam-555/AVI-VS-Health-checker/actions/workflows/pytest.yaml/badge.svg?branch=master&event=push)](https://github.com/Lingam-555/AVI-VS-Health-checker/actions/workflows/pytest.yaml)
 
 A practice project that fetches virtual services (VS) from an AVI-style API, classifies each one as healthy, warning, critical, down or unknown, and prints a summary. It runs against a local fake server, and no real controller is involved.
 
@@ -84,5 +84,3 @@ The client tests use a fake session, so no server is needed.
 ## Limits
 - It has been tested only against `fake_server.py`. A real controller's API paths, reply fields and login method may differ, and the project would need adapting.
 - `fake_server.py` and its token are for practice only.
-
-[![Github workflow](https://github.com/Lingam-555/AVI-VS-Health-checker/actions/workflows/pytest.yaml/badge.svg?branch=master&event=push)](https://github.com/Lingam-555/AVI-VS-Health-checker/actions/workflows/pytest.yaml)
