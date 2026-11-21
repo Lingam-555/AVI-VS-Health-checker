@@ -18,9 +18,9 @@ jobs:
             uses: actions/setup-python@v7.1.0
             with:
               python-version: '3.12'
-# 9.       - install the requirements (requirements.txt does not exist yet)
-          - name: Install pytest
-            run: pip install requests==2.31.0 pytest==7.4.4
+# 9.       - install the requirements
+          - name: Install dependencies
+            run: pip install -r requirements.txt
 # 10.      - run pytest
           - name: run pytest
             run: pytest
