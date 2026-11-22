@@ -50,4 +50,4 @@ class Handler(BaseHTTPRequestHandler):
             body["next"] = f"http://127.0.0.1:8000/vs_pages?page={page + 1}"
         self._send(200, body)
 
-HTTPServer(("127.0.0.1", 8000), Handler).serve_forever()
+HTTPServer(("0.0.0.0", 8000), Handler).serve_forever()
