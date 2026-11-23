@@ -22,9 +22,11 @@ jobs:
           - name: Install dependencies
             run: pip install -r requirements.txt
 # 1. name: the step label shown in the Actions log
-          - name: test Dockerfile
+          - name: Build Image
 # 2. run: the docker command that builds the image from the Dockerfile in the repository root, tagged avi_server
             run: docker build -t avi_server .
+          - name: Run and test python test file in Docker container
+            run: docker run --rm avi_server python3 -m pytest -q
 # 10.      - run pytest
           - name: run pytest
             run: pytest
